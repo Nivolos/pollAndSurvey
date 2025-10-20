@@ -1,0 +1,31 @@
+<section class="auth-shell">
+  <div class="switcher">
+    <button type="button" (click)="switchMode('login')" [class.active]="mode === 'login'">Anmelden</button>
+    <button type="button" (click)="switchMode('register')" [class.active]="mode === 'register'">Registrieren</button>
+  </div>
+
+  <form *ngIf="mode === 'login'" [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+    <label>E-Mail
+      <input type="email" formControlName="email" />
+    </label>
+    <label>Passwort
+      <input type="password" formControlName="password" />
+    </label>
+    <button type="submit">Anmelden</button>
+  </form>
+
+  <form *ngIf="mode === 'register'" [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+    <label>Voller Name
+      <input type="text" formControlName="fullName" />
+    </label>
+    <label>E-Mail
+      <input type="email" formControlName="email" />
+    </label>
+    <label>Passwort
+      <input type="password" formControlName="password" />
+    </label>
+    <button type="submit">Registrieren</button>
+  </form>
+
+  <p class="error" *ngIf="error">{{ error }}</p>
+</section>
