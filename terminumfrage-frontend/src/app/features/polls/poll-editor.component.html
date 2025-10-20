@@ -1,0 +1,40 @@
+<form class="poll-editor" [formGroup]="form" (ngSubmit)="submit()">
+  <div class="form-row">
+    <label>Titel
+      <input formControlName="title" type="text" />
+    </label>
+    <div class="error" *ngIf="form.get('title')?.invalid && form.get('title')?.touched">Titel erforderlich.</div>
+  </div>
+
+  <div class="form-row">
+    <label>Beschreibung
+      <textarea formControlName="description"></textarea>
+    </label>
+  </div>
+
+  <section class="slots">
+    <h2>Terminvorschläge</h2>
+    <div class="slot" *ngFor="let slot of timeSlots.controls; index as i" [formGroup]="slot">
+      <label>Start
+        <input type="datetime-local" formControlName="start" />
+      </label>
+      <label>Ende
+        <input type="datetime-local" formControlName="end" />
+      </label>
+      <button type="button" (click)="removeSlot(i)" *ngIf="timeSlots.length > 1">Entfernen</button>
+    </div>
+    <button type="button" class="secondary" (click)="addSlot()">Slot hinzufügen</button>
+  </section>
+
+  <section class="invitations">
+    <h2>Teilnehmer</h2>
+    <div class="invitation" *ngFor="let invitation of invitations.controls; index as i" [formGroup]="invitation">
+      <input type="email" formControlName="email" placeholder="name@example.com" />
+      <button type="button" (click)="removeInvitation(i)" *ngIf="invitations.length > 1">Entfernen</button>
+    </div>
+    <button type="button" class="secondary" (click)="addInvitation()">Teilnehmer hinzufügen</button>
+  </section>
+
+  <button type="submit" class="primary">Speichern</button>
+  <p class="error" *ngIf="error">{{ error }}</p>
+</form>
