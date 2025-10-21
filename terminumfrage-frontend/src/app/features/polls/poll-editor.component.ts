@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PollsApiService } from './polls-api.service';
 
@@ -20,22 +20,22 @@ export class PollEditorComponent {
   readonly form = this.fb.nonNullable.group({
     title: ['', [Validators.required]],
     description: [''],
-    timeSlots: this.fb.array([
+    timeSlots: this.fb.array<FormGroup>([
       this.createSlot()
     ]),
-    invitations: this.fb.array([
+    invitations: this.fb.array<FormGroup>([
       this.createInvitation()
     ])
   });
 
   constructor(private readonly fb: FormBuilder, private readonly pollsApi: PollsApiService, private readonly router: Router) {}
 
-  get timeSlots(): FormArray {
-    return this.form.get('timeSlots') as FormArray;
+  get timeSlots(): FormArray<FormGroup> {
+    return this.form.controls.timeSlots as FormArray<FormGroup>;
   }
 
-  get invitations(): FormArray {
-    return this.form.get('invitations') as FormArray;
+  get invitations(): FormArray<FormGroup> {
+    return this.form.controls.invitations as FormArray<FormGroup>;
   }
 
   addSlot(): void {
@@ -67,7 +67,9 @@ export class PollEditorComponent {
         start: new Date(slot.start).toISOString(),
         end: new Date(slot.end).toISOString()
       })),
-      invitations: payload.invitations
+      invitations: payload.invitations.map(invitation => ({
+        email: invitation.email
+      }))
     };
     this.pollsApi.createPoll(body).subscribe({
       next: poll => this.router.navigate(['/polls', poll.id]),

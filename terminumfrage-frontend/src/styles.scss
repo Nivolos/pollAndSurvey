@@ -1,11 +1,12 @@
 :root {
   font-family: 'Inter', system-ui, sans-serif;
-  background: #f9fafb;
   color: #111827;
 }
 
 body {
   margin: 0;
+  background: #f3f4f6;
+  min-height: 100vh;
 }
 
 a {
@@ -14,4 +15,10 @@ a {
 
 button {
   cursor: pointer;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }

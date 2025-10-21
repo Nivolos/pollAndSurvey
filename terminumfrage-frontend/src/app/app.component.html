@@ -1,9 +1,20 @@
 <header class="app-header">
-  <h1>{{ title }}</h1>
-  <nav>
-    <a routerLink="/polls" routerLinkActive="active">Meine Umfragen</a>
-    <a routerLink="/invitations" routerLinkActive="active">Einladungen</a>
+  <div class="brand">
+    <h1>{{ title }}</h1>
+    <p>Terminabstimmungen im Team koordinieren</p>
+  </div>
+  <nav *ngIf="isAuthenticated" aria-label="Hauptnavigation">
+    <a routerLink="/polls" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Meine Umfragen</a>
+    <a routerLink="/polls/new" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Umfrage erstellen</a>
+    <a routerLink="/invitations" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Einladungen</a>
   </nav>
+  <div class="user" *ngIf="isAuthenticated; else guest">
+    <span class="name" aria-label="Angemeldet als">{{ fullName }}</span>
+    <button type="button" (click)="logout()">Abmelden</button>
+  </div>
+  <ng-template #guest>
+    <a class="login-link" routerLink="/login">Anmelden</a>
+  </ng-template>
 </header>
 <main class="app-content">
   <router-outlet></router-outlet>

@@ -61,5 +61,8 @@
       }
     }
   },
-  "defaultProject": "terminumfrage-frontend"
+  "defaultProject": "terminumfrage-frontend",
+  "cli": {
+    "analytics": false
+  }
 }

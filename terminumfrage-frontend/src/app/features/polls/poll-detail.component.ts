@@ -38,4 +38,11 @@ export class PollDetailComponent implements OnInit {
     const max = Math.max(...scores);
     return summary.yesCount * 2 + summary.maybeCount === max;
   }
+
+  slotSummary(poll: PollDetail, slotId?: number) {
+    if (!slotId) {
+      return null;
+    }
+    return poll.slotSummaries?.[slotId] ?? null;
+  }
 }

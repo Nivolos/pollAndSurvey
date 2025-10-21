@@ -12,6 +12,7 @@ import { PollListComponent } from './features/polls/poll-list.component';
 import { PollEditorComponent } from './features/polls/poll-editor.component';
 import { PollDetailComponent } from './features/polls/poll-detail.component';
 import { InvitationListComponent } from './features/invitations/invitation-list.component';
+import { InvitationResponseComponent } from './features/invitations/invitation-response.component';
 import { AuthGuard } from './core/auth.guard';
 import { AuthInterceptor } from './core/auth.interceptor';
 
@@ -22,7 +23,8 @@ import { AuthInterceptor } from './core/auth.interceptor';
     PollListComponent,
     PollEditorComponent,
     PollDetailComponent,
-    InvitationListComponent
+    InvitationListComponent,
+    InvitationResponseComponent
   ],
   imports: [
     BrowserModule,

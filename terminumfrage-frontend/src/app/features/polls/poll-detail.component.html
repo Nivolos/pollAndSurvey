@@ -1,17 +1,22 @@
-<ng-container *ngIf="poll$ | async as poll">
+<ng-container *ngIf="poll$ | async as poll; else loading">
   <section class="poll-detail">
-    <header>
-      <h1>{{ poll.title }}</h1>
-      <span class="status">{{ poll.status }}</span>
+    <header class="hero">
+      <div>
+        <span class="status" [ngClass]="poll.status.toLowerCase()">{{ poll.status }}</span>
+        <h1>{{ poll.title }}</h1>
+        <p class="description" *ngIf="poll.description; else noDescription">{{ poll.description }}</p>
+        <ng-template #noDescription>
+          <p class="description muted">Keine Beschreibung hinterlegt.</p>
+        </ng-template>
+        <p class="meta">Erstellt am {{ poll.createdAt | date: 'medium' }}</p>
+      </div>
+      <div class="hero-actions" *ngIf="poll.status === 'DRAFT'">
+        <button type="button" class="primary" (click)="open(poll.id)">Umfrage öffnen</button>
+      </div>
     </header>
-    <p>{{ poll.description }}</p>
 
-    <section class="actions" *ngIf="poll.status === 'DRAFT'">
-      <button (click)="open(poll.id)">Umfrage öffnen</button>
-    </section>
-
-    <section class="matrix">
-      <h2>Slots</h2>
+    <section class="matrix" *ngIf="poll.timeSlots.length > 0; else emptySlots">
+      <h2>Terminvorschläge</h2>
       <table>
         <thead>
           <tr>
@@ -19,28 +24,47 @@
             <th>Ja</th>
             <th>Vielleicht</th>
             <th>Nein</th>
-            <th *ngIf="poll.status === 'OPEN'">Finalisieren</th>
+            <th *ngIf="poll.status === 'OPEN'">Aktion</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let slot of poll.timeSlots">
             <td>
-              <span [class.best]="bestSlot(slot.id!, poll)">{{ slot.start | date: 'short' }} - {{ slot.end | date: 'shortTime' }}</span>
+              <span [class.best]="bestSlot(slot.id!, poll)">
+                {{ slot.start | date: 'EEEE, dd.MM.yyyy' }} · {{ slot.start | date: 'shortTime' }} – {{ slot.end | date: 'shortTime' }}
+              </span>
             </td>
-            <td>{{ poll.slotSummaries[slot.id!]?.yesCount || 0 }}</td>
-            <td>{{ poll.slotSummaries[slot.id!]?.maybeCount || 0 }}</td>
-            <td>{{ poll.slotSummaries[slot.id!]?.noCount || 0 }}</td>
-            <td *ngIf="poll.status === 'OPEN'"><button (click)="finalize(poll.id, slot.id!)">Finalisieren</button></td>
+            <td>{{ slotSummary(poll, slot.id!)?.yesCount ?? 0 }}</td>
+            <td>{{ slotSummary(poll, slot.id!)?.maybeCount ?? 0 }}</td>
+            <td>{{ slotSummary(poll, slot.id!)?.noCount ?? 0 }}</td>
+            <td *ngIf="poll.status === 'OPEN'">
+              <button type="button" class="secondary" (click)="finalize(poll.id, slot.id!)">Finalisieren</button>
+            </td>
           </tr>
         </tbody>
       </table>
     </section>
 
+    <ng-template #emptySlots>
+      <p class="muted">Es wurden noch keine Terminvorschläge angelegt.</p>
+    </ng-template>
+
     <section class="participants">
       <h2>Teilnehmer</h2>
-      <ul>
-        <li *ngFor="let invitation of poll.invitations">{{ invitation.email }} – {{ invitation.state || 'eingeladen' }}</li>
+      <ul *ngIf="poll.invitations.length > 0; else noParticipants">
+        <li *ngFor="let invitation of poll.invitations">
+          <span class="email">{{ invitation.email }}</span>
+          <span class="state">{{ invitation.state || 'eingeladen' }}</span>
+        </li>
       </ul>
     </section>
+
+    <ng-template #noParticipants>
+      <p class="muted">Es wurden noch keine Teilnehmer eingeladen.</p>
+    </ng-template>
   </section>
 </ng-container>
+
+<ng-template #loading>
+  <p class="loading">Umfrage wird geladen …</p>
+</ng-template>

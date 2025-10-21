@@ -1,0 +1,63 @@
+<ng-container *ngIf="poll$ | async as poll; else loading">
+  <section class="invitation-response">
+    <header>
+      <div>
+        <h1>{{ poll.title }}</h1>
+        <p *ngIf="poll.description; else noDescription">{{ poll.description }}</p>
+        <ng-template #noDescription>
+          <p class="muted">Keine Beschreibung hinterlegt.</p>
+        </ng-template>
+      </div>
+      <span class="status" [ngClass]="poll.status.toLowerCase()">{{ poll.status }}</span>
+    </header>
+
+    <div class="content" *ngIf="poll.timeSlots.length > 0; else noSlots">
+      <form class="response-form" [formGroup]="form" (ngSubmit)="submit(poll)">
+        <table>
+          <thead>
+            <tr>
+              <th>Terminvorschlag</th>
+              <th>Meine Antwort</th>
+              <th>Gruppe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let slot of poll.timeSlots; index as i">
+              <td class="slot">
+                <span class="date">{{ slot.start | date: 'EEEE, dd.MM.yyyy' }}</span>
+                <span class="time">{{ slot.start | date: 'shortTime' }} – {{ slot.end | date: 'shortTime' }}</span>
+              </td>
+              <td class="options">
+                <button type="button" [class.active]="selectedValue(i) === 'YES'" (click)="choose(i, 'YES')">Ja</button>
+                <button type="button" [class.active]="selectedValue(i) === 'MAYBE'" (click)="choose(i, 'MAYBE')">Vielleicht</button>
+                <button type="button" [class.active]="selectedValue(i) === 'NO'" (click)="choose(i, 'NO')">Nein</button>
+              </td>
+              <td class="summary" *ngIf="slotSummary(poll, slot.id) as summary">
+                <span class="yes">{{ summary.yesCount }} Zusagen</span>
+                <span class="maybe">{{ summary.maybeCount }} Unentschlossen</span>
+                <span class="no">{{ summary.noCount }} Absagen</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="form-actions">
+          <button type="submit" class="primary" [disabled]="isSubmitting">
+            {{ isSubmitting ? 'Speichern …' : 'Antworten speichern' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <ng-template #noSlots>
+      <p class="muted">Für diese Umfrage wurden noch keine Terminvorschläge hinterlegt.</p>
+    </ng-template>
+
+    <p class="success" *ngIf="success">Vielen Dank! Deine Antworten wurden gespeichert.</p>
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  <p class="loading">Umfrage wird geladen …</p>
+</ng-template>
