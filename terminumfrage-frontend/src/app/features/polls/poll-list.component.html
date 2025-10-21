@@ -1,23 +1,28 @@
 <section class="poll-list">
-  <div class="actions">
+  <header class="section-head">
+    <h1>Meine Umfragen</h1>
     <a class="primary" routerLink="/polls/new">Neue Umfrage</a>
-  </div>
-  <table>
-    <thead>
-      <tr>
-        <th>Titel</th>
-        <th>Status</th>
-        <th>Erstellt am</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let poll of polls$ | async">
-        <td>{{ poll.title }}</td>
-        <td>{{ poll.status }}</td>
-        <td>{{ poll.createdAt | date: 'short' }}</td>
-        <td><a [routerLink]="['/polls', poll.id]">Details</a></td>
-      </tr>
-    </tbody>
-  </table>
+  </header>
+
+  <ng-container *ngIf="polls$ | async as polls; else loading">
+    <div class="poll-grid" *ngIf="polls.length > 0; else empty">
+      <article *ngFor="let poll of polls">
+        <span class="badge" [ngClass]="poll.status.toLowerCase()">{{ poll.status }}</span>
+        <h2>{{ poll.title }}</h2>
+        <p class="meta">Erstellt am {{ poll.createdAt | date: 'medium' }}</p>
+        <a [routerLink]="['/polls', poll.id]" class="link">Details anzeigen</a>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #empty>
+    <p class="empty">
+      Noch keine Umfragen vorhanden. Starte mit einer
+      <a routerLink="/polls/new">neuen Umfrage</a>.
+    </p>
+  </ng-template>
+
+  <ng-template #loading>
+    <p class="loading">Umfragen werden geladen …</p>
+  </ng-template>
 </section>

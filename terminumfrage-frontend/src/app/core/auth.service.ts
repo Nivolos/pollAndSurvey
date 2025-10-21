@@ -34,6 +34,14 @@ export class AuthService {
     return this.storage.get('token');
   }
 
+  get fullName(): string | null {
+    return this.storage.get('fullName');
+  }
+
+  get email(): string | null {
+    return this.storage.get('email');
+  }
+
   private persist(response: AuthResponse): void {
     this.storage.set('token', response.token);
     this.storage.set('fullName', response.fullName);

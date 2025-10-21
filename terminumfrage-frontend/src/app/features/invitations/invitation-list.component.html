@@ -1,18 +1,34 @@
 <section class="invitation-list">
-  <table>
-    <thead>
-      <tr>
-        <th>Titel</th>
-        <th>Status</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let poll of invitations$ | async">
-        <td>{{ poll.title }}</td>
-        <td>{{ poll.status }}</td>
-        <td><a [routerLink]="['/polls', poll.id]">Details ansehen</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <h1>Einladungen</h1>
+  <ng-container *ngIf="invitations$ | async as invitations; else loading">
+    <table *ngIf="invitations.length > 0; else empty">
+      <thead>
+        <tr>
+          <th>Titel</th>
+          <th>Status</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let poll of invitations">
+          <td>{{ poll.title }}</td>
+          <td>
+            <span class="badge" [ngClass]="poll.status.toLowerCase()">{{ poll.status }}</span>
+          </td>
+          <td class="actions">
+            <a [routerLink]="['/polls', poll.id]">Details</a>
+            <a [routerLink]="['/invitations', poll.id]" class="primary">Teilnehmen</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-template #empty>
+    <p class="empty">Aktuell liegen keine Einladungen vor.</p>
+  </ng-template>
+
+  <ng-template #loading>
+    <p class="loading">Einladungen werden geladen …</p>
+  </ng-template>
 </section>
