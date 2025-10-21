@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PollsApiService } from './polls-api.service';
 
@@ -14,37 +14,28 @@ function toDateTimeLocal(date: Date): string {
   styleUrls: ['./poll-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-type SlotFormGroup = FormGroup<{
-  start: FormControl<string>;
-  end: FormControl<string>;
-}>;
-
-type InvitationFormGroup = FormGroup<{
-  email: FormControl<string>;
-}>;
-
 export class PollEditorComponent {
   error: string | null = null;
 
   readonly form = this.fb.nonNullable.group({
-    title: this.fb.nonNullable.control('', [Validators.required]),
-    description: this.fb.nonNullable.control(''),
-    timeSlots: this.fb.array<SlotFormGroup>([
+    title: ['', [Validators.required]],
+    description: [''],
+    timeSlots: this.fb.array([
       this.createSlot()
     ]),
-    invitations: this.fb.array<InvitationFormGroup>([
+    invitations: this.fb.array([
       this.createInvitation()
     ])
   });
 
   constructor(private readonly fb: FormBuilder, private readonly pollsApi: PollsApiService, private readonly router: Router) {}
 
-  get timeSlots(): FormArray<SlotFormGroup> {
-    return this.form.controls.timeSlots;
+  get timeSlots(): FormArray {
+    return this.form.get('timeSlots') as FormArray;
   }
 
-  get invitations(): FormArray<InvitationFormGroup> {
-    return this.form.controls.invitations;
+  get invitations(): FormArray {
+    return this.form.get('invitations') as FormArray;
   }
 
   addSlot(): void {
@@ -84,18 +75,18 @@ export class PollEditorComponent {
     });
   }
 
-  private createSlot(): SlotFormGroup {
+  private createSlot() {
     const start = new Date();
     const end = new Date(start.getTime() + 60 * 60 * 1000);
     return this.fb.nonNullable.group({
-      start: this.fb.nonNullable.control(toDateTimeLocal(start), Validators.required),
-      end: this.fb.nonNullable.control(toDateTimeLocal(end), Validators.required)
+      start: [toDateTimeLocal(start), Validators.required],
+      end: [toDateTimeLocal(end), Validators.required]
     });
   }
 
-  private createInvitation(): InvitationFormGroup {
+  private createInvitation() {
     return this.fb.nonNullable.group({
-      email: this.fb.nonNullable.control('', [Validators.required, Validators.email])
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 }

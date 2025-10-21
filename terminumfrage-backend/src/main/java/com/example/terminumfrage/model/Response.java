@@ -43,7 +43,7 @@ public class Response {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "response_value", nullable = false)
+    @Column(nullable = false)
     private ResponseValue value;
 
     public Long getId() {
