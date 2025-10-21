@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminumfrage API &amp; Demo</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7fb;
+      --card: rgba(255, 255, 255, 0.9);
+      --border: rgba(30, 60, 114, 0.2);
+      --accent: #1e3c72;
+      --accent-light: #2a5298;
+      font-family: "Segoe UI", Roboto, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(160deg, #eef2f7 0%, #cfd9df 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: #1e2a3a;
+    }
+
+    .card {
+      max-width: 860px;
+      width: 100%;
+      background: var(--card);
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 45px rgba(30, 60, 114, 0.15);
+      padding: 2.5rem 3rem;
+      backdrop-filter: blur(8px);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2.4rem;
+      background: linear-gradient(120deg, var(--accent), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: rgba(30, 42, 58, 0.75);
+    }
+
+    section + section {
+      margin-top: 2rem;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    ul {
+      padding-left: 1.2rem;
+      margin: 0;
+    }
+
+    li {
+      margin-bottom: 0.35rem;
+      line-height: 1.45;
+    }
+
+    code {
+      background: rgba(30, 60, 114, 0.08);
+      border-radius: 6px;
+      padding: 0.2rem 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .cta a {
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(120deg, var(--accent), var(--accent-light));
+      padding: 0.9rem 1.6rem;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 12px 25px rgba(30, 60, 114, 0.25);
+    }
+
+    .cta a.secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid rgba(30, 60, 114, 0.35);
+      box-shadow: none;
+    }
+
+    .cta a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 32px rgba(30, 60, 114, 0.3);
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.85rem;
+      color: rgba(30, 42, 58, 0.6);
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 1.25rem;
+      }
+
+      .card {
+        padding: 1.75rem;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Terminumfrage Backend</h1>
+    <p class="subtitle">Dein Spring Boot Server läuft. Von hier aus erreichst du sowohl die REST-API als auch die Angular-Oberfläche (via Proxy).</p>
+
+    <section>
+      <h2>Los geht&rsquo;s</h2>
+      <ul>
+        <li><strong>API-Health:</strong> <code>curl http://localhost:8080/actuator/health</code> (falls Actuator aktiviert ist).</li>
+        <li><strong>H2-Konsole:</strong> <a href="/h2-console">/h2-console</a> (JDBC URL <code>jdbc:h2:mem:terminumfrage</code>).</li>
+        <li><strong>Poll-Endpunkte:</strong> Authentifiziert erreichbar unter <code>/api/v1/polls</code>.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Angular-Frontend starten</h2>
+      <ol>
+        <li><code>cd terminumfrage-frontend</code></li>
+        <li><code>npm install</code> (erstinstallation)</li>
+        <li><code>npm start</code> oder <code>ng serve --proxy-config proxy.conf.json</code></li>
+      </ol>
+      <p>Die Proxy-Konfiguration leitet Aufrufe von <code>/api</code> automatisch an dieses Backend weiter.</p>
+    </section>
+
+    <div class="cta">
+      <a href="http://localhost:4200" target="_blank" rel="noopener">Angular-Frontend öffnen</a>
+      <a class="secondary" href="/api/v1/polls" target="_blank" rel="noopener">API ausprobieren (Login nötig)</a>
+    </div>
+
+    <footer>
+      Statusseite automatisch bereitgestellt von Spring Boot &ndash; passe den Inhalt unter <code>src/main/resources/static/index.html</code> nach Bedarf an.
+    </footer>
+  </main>
+</body>
+</html>
