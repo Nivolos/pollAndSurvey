@@ -1,0 +1,46 @@
+<ng-container *ngIf="poll$ | async as poll">
+  <section class="poll-detail">
+    <header>
+      <h1>{{ poll.title }}</h1>
+      <span class="status">{{ poll.status }}</span>
+    </header>
+    <p>{{ poll.description }}</p>
+
+    <section class="actions" *ngIf="poll.status === 'DRAFT'">
+      <button (click)="open(poll.id)">Umfrage öffnen</button>
+    </section>
+
+    <section class="matrix">
+      <h2>Slots</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Slot</th>
+            <th>Ja</th>
+            <th>Vielleicht</th>
+            <th>Nein</th>
+            <th *ngIf="poll.status === 'OPEN'">Finalisieren</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let slot of poll.timeSlots">
+            <td>
+              <span [class.best]="bestSlot(slot.id!, poll)">{{ slot.start | date: 'short' }} - {{ slot.end | date: 'shortTime' }}</span>
+            </td>
+            <td>{{ poll.slotSummaries[slot.id!]?.yesCount || 0 }}</td>
+            <td>{{ poll.slotSummaries[slot.id!]?.maybeCount || 0 }}</td>
+            <td>{{ poll.slotSummaries[slot.id!]?.noCount || 0 }}</td>
+            <td *ngIf="poll.status === 'OPEN'"><button (click)="finalize(poll.id, slot.id!)">Finalisieren</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="participants">
+      <h2>Teilnehmer</h2>
+      <ul>
+        <li *ngFor="let invitation of poll.invitations">{{ invitation.email }} – {{ invitation.state || 'eingeladen' }}</li>
+      </ul>
+    </section>
+  </section>
+</ng-container>
