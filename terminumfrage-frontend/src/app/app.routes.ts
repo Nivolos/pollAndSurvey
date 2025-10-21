@@ -4,6 +4,7 @@ import { PollListComponent } from './features/polls/poll-list.component';
 import { PollDetailComponent } from './features/polls/poll-detail.component';
 import { PollEditorComponent } from './features/polls/poll-editor.component';
 import { InvitationListComponent } from './features/invitations/invitation-list.component';
+import { InvitationResponseComponent } from './features/invitations/invitation-response.component';
 import { AuthGuard } from './core/auth.guard';
 
 export const AppRoutes: Routes = [
@@ -16,6 +17,7 @@ export const AppRoutes: Routes = [
       { path: 'polls/new', component: PollEditorComponent },
       { path: 'polls/:id', component: PollDetailComponent },
       { path: 'invitations', component: InvitationListComponent },
+      { path: 'invitations/:id', component: InvitationResponseComponent },
       { path: '', pathMatch: 'full', redirectTo: 'polls' }
     ]
   },
